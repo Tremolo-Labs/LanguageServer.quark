@@ -10,6 +10,7 @@ var testFiles = [
     "LSP-test-completion-parsing.scd",
     "LSP-test-validatePrefix-edge-cases.scd",
     "LSP-test-handleCompletion.scd",
+    "LSP-test-error-diagnostics.scd",
 ];
 var basePath = thisProcess.nowExecutingPath.dirname ++ "/";
 
