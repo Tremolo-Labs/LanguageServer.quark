@@ -41,6 +41,19 @@ EvaluateProvider : LSPProvider {
         ^result;
     }
     
+    captureErrorReport {
+        |error|
+        var report;
+        try {
+            report = String.streamContents({ |stream| error.reportError(stream) });
+        } {
+            |e|
+            Log('LanguageServer.quark').warning("Failed to capture error report: %", e);
+            report = error.what ? "";
+        };
+        ^report
+    }
+
     onReceived {
         |method, params|
         var source, document, function, guestUser, result, deferredResult,
@@ -90,10 +103,15 @@ EvaluateProvider : LSPProvider {
                 deferredResult.value = (result: result);
             } {
                 |error|
+                var report = this.captureErrorReport(error);
                 if (postResult) {
-                    error.reportError();
+                    report.post;
                 };
-                deferredResult.value = (error: error.errorString);
+                server.prSendMessage((
+                    method: "window/logMessage",
+                    params: (type: 1, message: report)
+                ));
+                deferredResult.value = (error: report);
             };
             
             if (documentEnvironment.isNil) {
