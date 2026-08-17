@@ -17,7 +17,6 @@ WorkspaceConfiguration : LSPRequest {
         sections = [
             "sclang.evaluateResultPrefix",
             "sclang.postEvaluateResults",
-            "sclang.improvedErrorReports",
             "languageServerLogLevel"
         ];
         clientOptions = ();
